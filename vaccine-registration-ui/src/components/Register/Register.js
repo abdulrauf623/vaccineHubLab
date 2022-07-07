@@ -16,8 +16,8 @@ export default function Signup({ setAppState }) {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     date: "",
     password: "",
@@ -68,8 +68,8 @@ export default function Signup({ setAppState }) {
       const res = await axios.post("http://localhost:3001/auth/register", {
         date: form.date,
         location: form.location,
-        firstName: form.firstName,
-        lastName: form.lastName,
+        first_name: form.first_name,
+        last_name: form.last_name,
         email: form.email,
         password: form.password,
       })
@@ -129,23 +129,23 @@ export default function Signup({ setAppState }) {
               <label htmlFor="name">First Name</label>
               <input
                 type="text"
-                name="firstName"
+                name="first_name"
                 placeholder="Jane"
-                value={form.firstName}
+                value={form.first_name}
                 onChange={handleOnInputChange}
               />
-              {errors.firstName && <span className="error">{errors.firstName}</span>}
+              {errors.first_name && <span className="error">{errors.first_name}</span>}
             </div>
             <div className="input-field">
               <label htmlFor="name">Last Name</label>
               <input
                 type="text"
-                name="lastName"
+                name="last_name"
                 placeholder="Doe"
-                value={form.lastName}
+                value={form.last_name}
                 onChange={handleOnInputChange}
               />
-              {errors.lastName && <span className="error">{errors.lastName}</span>}
+              {errors.last_name && <span className="error">{errors.last_name}</span>}
             </div>
           </div>
 
@@ -215,8 +215,8 @@ export default function Signup({ setAppState }) {
 //   const navigate = useNavigate()
 //   const [isLoading, setIsLoading] = React.useState(false)
 //   const [form, setForm] = React.useState({
-//     firstName: "",
-//     lastName: "",
+//     first_name: "",
+//     last_name: "",
 //     email: "",
 //     date: "",
 //     password: "",

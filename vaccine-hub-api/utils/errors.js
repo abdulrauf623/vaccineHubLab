@@ -52,9 +52,18 @@ constructor(message = "Bad Request") {
 }
 
 
+class UnauthorizedError extends ExpressError {
+
+
+    constructor(message = "Unauthorized") {
+
+        super(message, 401)
+    }
+}
+
+
 
 module.exports = {
 
-    ExpressError, NotFoundError, BadRequestError
-
+    ExpressError, NotFoundError, BadRequestError, UnauthorizedError
 }

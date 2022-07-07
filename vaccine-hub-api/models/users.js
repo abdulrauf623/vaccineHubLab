@@ -1,6 +1,7 @@
 
-
-const { BadRequestError } = require("../utils/errors")
+const bcrypt = require("bcrypt")
+const { BadRequestError, UnauthorizedError} = require("../utils/errors")
+const {BCRYPT_WORK_FACTOR} = require("/Users/abdul.karim/vaccineHubLab/config")
 
 const db = require("/Users/abdul.karim/vaccineHubLab/db")
 
@@ -39,6 +40,9 @@ class User {
         }
 
 
+        const hashedPassword = await bcrypt.hash(credentials.password, BCRYPT_WORK_FACTOR)
+
+
         const lowerCasedEmail = credentials.email.toLowerCase()
 
 
@@ -55,7 +59,7 @@ class User {
         
         
         
-        `, [lowerCasedEmail, credentials.password, credentials.first_name, credentials.last_name, credentials.location, credentials.date])
+        `, [lowerCasedEmail, hashedPassword, credentials.first_name, credentials.last_name, credentials.location, credentials.date])
 
 
         const user = result.rows[0]
@@ -70,11 +74,49 @@ class User {
     }
 
 
-    static login(){
+    static async login(credentials){
 
 
 
 // to let people log into the page 
+
+
+const requiredFields = ["email", "password"]
+
+
+requiredFields.forEach(field => {
+
+
+
+    if (!credentials.hasOwnProperty(field)){
+
+        throw new BadRequestError(`Missing ${field} in request body`)
+    }
+})
+
+
+const existingUser = await User.fetchUserByEmail(credentials.email)
+
+
+if (existingUser){
+
+
+    const isValid = await bcrypt.compare(credentials.password, existingUser.password)
+
+
+    if (isValid){
+
+        return existingUser
+    }
+}
+
+
+
+
+
+
+throw new UnauthorizedError("Invalid email/password combination")
+
 
 
 

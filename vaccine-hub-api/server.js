@@ -1,46 +1,37 @@
-const app = require("./app")
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const { PORT } = require("../config");
+const authRoutes = require("../vaccine-hub-api/routes/auth");
+const {
+  NotFoundError,
+  BadRequestError,
+} = require("../vaccine-hub-api/utils/errors");
 
-const cors = require("cors")
+const app = express();
 
-const morgan = require('morgan')
+app.use(cors());
 
-app.use(cors())
+app.use(express.json());
 
-app.use(morgan("tiny"))
+app.use(morgan("tiny"));
 
-
-const { NotFoundError } = require("../utils/errors")
-
-app.use(express.json())
-
-
+app.use("/auth", authRoutes);
 
 app.use((req, res, next) => {
-
-
-    return next(new NotFoundError())
-
-})
-
+  return next(new NotFoundError());
+});
 
 app.use((err, req, res, next) => {
+  const status = err.status || 500;
 
+  const message = err.message;
 
-    const status = err.status
+  return res.status(status).json({
+    error: { message, status },
+  });
+});
 
-    const message = err.message
-
-    return res.status(status).json({
-
-
-        error : {message, status}
-    })
-
-
-})
-
-const port = process.env.PORT || 3001
-
-app.listen(port, () => {
-  console.log(`🚀 Server listening on port http://localhost:${port}`)
-})
+app.listen(PORT, () => {
+  console.log(`🚀 Server listening on PORT http://localhost:${PORT}`);
+});
